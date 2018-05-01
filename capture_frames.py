@@ -2,11 +2,20 @@ import argparse
 import numpy as np
 import cv2
 import os
+from time import sleep
 
 def capture_frames(nframes=int, path=str):
-    
+    gst = "nvcamerasrc ! video/x-raw(memory:NVMM), width=(int)1280, " + \
+          "height=(int)720,format=(string)I420, framerate=(fraction)24/1 ! " + \
+          " nvvidconv flip-method=4 ! video/x-raw, format=(string)BGRx ! " + \
+          " videoconvert ! video/x-raw, format=(string)BGR ! appsink"
+    cap = cv2.VideoCapture(gst)
+
+    print("Setting up camera...")
+    sleep(1)
+    print("Capturing images.")
+
     for i in xrange(nframes):
-        cap = cv2.VideoCapture(0) # video capture default source camera
         ret,frame = cap.read() # return a single frame in variable `frame`
         frame_name = 'frame' + str(i)
         frame_path = path + '/frame' + str(i) + '.png'
@@ -15,7 +24,8 @@ def capture_frames(nframes=int, path=str):
         cv2.waitKey(200) # show and wait 200 ms
         cv2.imwrite(frame_path,frame) # save image
         cv2.destroyAllWindows() # close window
-        cap.release()
+
+    cap.release()
 
 def main():
     parser = argparse.ArgumentParser(description = 'Captures n frames and saves them to the chosen path.')
