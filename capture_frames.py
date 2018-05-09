@@ -21,11 +21,11 @@ def capture_frames(nframes=int, path=str):
     for i in xrange(nframes):
         ret,frame = cap.read() # return a single frame in variable `frame`
         frame_name = 'frame' + str(i)
-        frame_path = path + '/frame' + str(i) + '.png'
+        frame_path = path + '/frame{0:0=3d}'.format(i) + '.png'
         print(frame_name + ' ' + frame_path)
         #cv2.imshow(frame_name, frame) #display the captured image
         cv2.imshow('tx1Cam', frame) #display the captured image
-        cv2.waitKey(200) # show and wait 200 ms
+        cv2.waitKey(100) # show and wait 200 ms
         cv2.imwrite(frame_path, frame) # save image
 
     cv2.destroyAllWindows() # close window
