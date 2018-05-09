@@ -12,27 +12,34 @@ def capture_frames(nframes=int, path=str):
     cap = cv2.VideoCapture(gst)
 
     print("Setting up camera...")
+
+    # Sleep is because the camera takes some time to adapt itself to the light.
     sleep(1)
     print("Capturing images.")
 
+    cv2.namedWindow('tx1Cam')
     for i in xrange(nframes):
         ret,frame = cap.read() # return a single frame in variable `frame`
         frame_name = 'frame' + str(i)
         frame_path = path + '/frame' + str(i) + '.png'
-        print(frame_name +' '+frame_path)
-        cv2.imshow(frame_name,frame) #display the captured image
+        print(frame_name + ' ' + frame_path)
+        #cv2.imshow(frame_name, frame) #display the captured image
+        cv2.imshow('tx1Cam', frame) #display the captured image
         cv2.waitKey(200) # show and wait 200 ms
-        cv2.imwrite(frame_path,frame) # save image
-        cv2.destroyAllWindows() # close window
+        cv2.imwrite(frame_path, frame) # save image
+
+    cv2.destroyAllWindows() # close window
 
     cap.release()
 
 def main():
-    parser = argparse.ArgumentParser(description = 'Captures n frames and saves them to the chosen path.')
+    parser = argparse.ArgumentParser(description = 'Captures n frames and saves' + \
+                                    ' them to the chosen path.')
     parser.add_argument('-n', '--nframes', type=int, default=5,
-                        help='Amount of frames to be captured. Default is 5')
+                        help='Amount of frames to be captured. Default is 5 frames.')
     parser.add_argument('-p', '--path', type=str, default= os.getcwd() + '/images/',
-                        help='Path where the pictures will be saved. Default to current dir')
+                        help='Path where the pictures will be saved. Default' + \
+                        ' to current directory.')
     
     arguments = parser.parse_args()
 
